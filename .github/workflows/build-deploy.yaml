@@ -1,0 +1,32 @@
+name: test CI/CD
+# Ushbu deploy yamlda men aws ubuntu serveriga auto deploy uchun sozladim
+# birinchi setup python uchun --> install python3.12 --> install pip3.12 --> install poetry --> poetry install --only main
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push to GitHub Packages
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Upgrade pip
+        run: |
+          python3 -m pip install --upgrade pip
+
+      - name: Install poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Install all dependencies
+        run: |
+          poetry install --root ./ --only main
