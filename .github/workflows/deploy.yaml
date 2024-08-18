@@ -32,11 +32,6 @@ jobs:
           poetry add gunicorn uvicorn
         id: install_dependencies
 
-      - name: Run Alembic migrations
-        run: |
-          poetry run alembic upgrade head
-        id: run_migrations
-
       - name: Prepare SSH Key
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
