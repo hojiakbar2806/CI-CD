@@ -26,11 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install --no-root
-          poetry add gunicorn uvicorn
-
-      - name: Run Alembic migrations
-        run: |
-          poetry run alembic upgrade head
+          poetry add gunicorn uvicorn alembic
 
       - name: Deploy to EC2
         env:
@@ -41,7 +37,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST << 'EOF'
-            cd /home/ubuntu/ci_cd
+            cd /home/ubuntu/CI-CD
             git pull origin main
             poetry install --no-root
             poetry run alembic upgrade head
