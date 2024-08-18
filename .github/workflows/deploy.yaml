@@ -40,15 +40,10 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Add known hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-        id: add_known_hosts
-
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /home/ubuntu/ci_cd
+            cd /home/ubuntu/CI-CD
             git pull origin main
             poetry install --no-root
             poetry run alembic upgrade head
@@ -73,8 +68,6 @@ jobs:
           echo "Setup Python status: ${{ steps.setup_python.outcome }}"
           echo "Install Poetry status: ${{ steps.install_poetry.outcome }}"
           echo "Install dependencies status: ${{ steps.install_dependencies.outcome }}"
-          echo "Run migrations status: ${{ steps.run_migrations.outcome }}"
           echo "Prepare SSH Key status: ${{ steps.prepare_ssh_key.outcome }}"
-          echo "Add known hosts status: ${{ steps.add_known_hosts.outcome }}"
           echo "Deploy status: ${{ steps.deploy.outcome }}"
           echo "Cleanup status: ${{ steps.cleanup.outcome }}"
